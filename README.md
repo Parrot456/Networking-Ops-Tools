@@ -20,7 +20,7 @@ $var[0].localEndPoint.Port
 
 **Get-processTCP**
 
-Shows all active TCP connections associated with a process name. Name matches are wildcard to capture all relevant processes. All TCP connections will include process ID. Examples--
+Shows all active TCP connections associated with a process name. Name matches are wildcard to capture all relevant processes. All TCP connections will include the related process ID. Examples--
 
 #Output all TCP connections used by Firefox
 
