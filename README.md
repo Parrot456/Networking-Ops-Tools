@@ -25,3 +25,11 @@ Shows all active TCP connections associated with a process name. Name matches ar
 #Output all TCP connections used by Firefox
 
 get-processTCP -ProcessName firefox
+
+**nmap-basics**
+
+Notes on commonly used nmap options. Includes examples of application specific scanning such as SQL and REDIS.
+
+**Wireshark-filters-notes**
+
+Capture and display filters to exatract specific information such as strings.
