@@ -23,10 +23,6 @@ InstanceID           : 192.168.1.5++46175++30.92.257.198++443
 EnabledDefault       : 2
 RequestedState       : 5
 TransitioningToState : 12
-
-#
-
-
 #>
 function Get-processTCP {
     [CmdletBinding()]
@@ -46,10 +42,10 @@ function Get-processTCP {
             Write-Host "No TCP connections found for wildcard process name '$ProcessName'"
         }
         else {
+            #Reduce the number of properties shown. Output is the filtered list.
             $filteredConProp = $connections | Select-Object LocalAddress, LocalPort, RemoteAddress, `
             RemotePort, OwningProcess, AppliedSettings, OffloadState, InstanceID, EnabledDefault, RequestedState, TransitioningToState
-            
-            
+
             $filteredConProp
         }
     }
