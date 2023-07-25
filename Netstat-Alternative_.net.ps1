@@ -1,0 +1,1 @@
+$allTCPSockets = [Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetactiveTCPconnections()

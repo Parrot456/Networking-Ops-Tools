@@ -1,0 +1,105 @@
+###Basic searches###
+#destination IP
+ip.dst == 192.168.1.1
+
+#protocol
+http
+
+#OR condition 
+http||arp
+
+#AND condition
+http&&ip.src==192.168.1.4
+
+#port
+tcp.port eq 80
+
+#NOT condition 
+ip.dst != 192.168.1.1
+
+ip.addr eq 10.0.2.15 and ip.addr eq 10.0.2.5 and udp.port eq 952
+#match two IPs and port
+
+#use wireshark to identify TCP port scan
+https://www.infosecmatter.com/detecting-network-attacks-with-wireshark/
+Technique	        Wireshark Filter	                                                Command / Tool
+TCP SYN scan	    tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size<=1024	    nmap -sS <target>
+TCP Connect() scan	tcp.flags.syn==1 and tcp.flags.ack==0 and tcp.window_size>1024	    nmap -sT <target>
+TCP Null scan	    tcp.flags==0	                                                    nmap -sN <target>
+TCP FIN scan	    tcp.flags==0x001	                                                nmap -sF <target>
+TCP Xmass scan	    tcp.flags.fin==1 && tcp.flags.push==1 && tcp.flags.urg==1	        nmap -sX <target>
+UDP port scan	    icmp.type==3 and icmp.code==3	                                    nmap -sU <target>
+
+#search for vlan hopping
+dtp or vlan.too_many_tags
+
+#packet loss
+tcp.analysis.lost_segment or tcp.analysis.retransmission
+
+#identify ARP scanning
+arp.dst.hw_mac==00:00:00:00:00:00
+
+#identify ping sweeps
+icmp.type==8 or icmp.type==0
+
+#IP protocol scanning
+icmp.type==3 and icmp.code==2
+
+#identify TCP ping sweeps
+tcp.dstport==7
+
+#identify UDP ping sweeps
+udp.dstport==7
+
+#Common network attacks
+Technique	            Wireshark Filter	                                            Command / Tool
+ARP poisoning	        arp.duplicate-address-detected or arp.duplicate-address-frame   arpspoof, ettercap
+ICMP flood	            icmp and data.len > 48	                                        fping, hping
+VLAN hoping	            dtp or vlan.too_many_tags	                                    frogger, yersinia
+Unexplained packetloss  tcp.analysis.lost_segment or tcp.analysis.retransmission	    n/a
+
+###WIRELESS NETWORKS###
+#wireless network attacks and tools
+Technique	                Wireshark Filter	            Command / Tool
+Client deauthentication	    wlan.fc.type_subtype == 12	    aireplay-ng, mdk3, mdk4
+Client disassociation	    wlan.fc.type_subtype == 10	    mdk3, mdk4
+Fake AP beacon flood	    wlan.fc.type_subtype == 8       mdk3, mdk4
+Authentication DoS	        wlan.fc.type_subtype == 11      mdk3, mdk4
+
+#wireless attack that aims to deauthenticate users to capture the WPA2 4-way handshake
+wlan.fc.type_subtype == 12
+
+#AP beacon attack, floods the network with bogus APs to jam legitimate traffic
+#Such attack can be carried out using tools such as mdk3 or mdk4 (e.g. by running mdk4 wlan0mon b ).
+wlan.fc.type_subtype == 8
+
+# scans for type 11 frames, used in Authentication DOS attacks to flood AP with requests
+wlan.fc.type_subtype == 11
+
+###FILE TRANSFERS###
+#GENERAL guide 1
+One way I start is by using the filter tcp.len>0 to view only the TCP packets with payload. That will remove all the SYN, RST and ACK 
+packets that might confuse you. Then you can also use statistics -> conversations (TCP tab) and enable "Limit to display filter" to get 
+an overview of how much data was transferred in the sessions that do have payload data.
+
+#search for a specific IP source and include tcp packets with content (no handshakes)
+ip.src==192.168.1.16/32 and tcp.len>0
+
+###Searching for text or commands###
+tshark -i 2 -T fields -e text port 80| find "your text"
+tshark -i 2 -T fields -e ip.src -e ip.dst -e text port 80| find "your text"` 
+tshark -i 3 -R "data-text-lines contains '{your text}' " -e data-text-lines
+tshark -i 3 -R "data-text-lines matches '{regex}' " -e data-text-lines
+tshark -i 3 -R data-text-lines -T fields -e data-text-lines
+
+#SMB traffic
+smb.file == "printevil.dll"
+
+#Search for string in packet content, GUI method
+1. Edit > Find packet
+2. From left to right select Packet details, Narrow & Wide, string
+3. Enter string in search field
+4. Click find to iterate through matches
+
+#Search for string in packet content, display filter method
+tcp.port == 80 and http and ip.src == 8.8.8.8 and frame contains "interesting text here!"
