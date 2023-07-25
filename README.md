@@ -16,6 +16,7 @@ Get-TCPConnections | ConvertTo-Csv | Out-File c:\temp\TCPsock.csv
 #Extract specific value from a socket for further automation
 
 $var = Get-TCPConnections
+
 $var[0].localEndPoint.Port
 
 **Get-processTCP**
