@@ -1,4 +1,17 @@
-# Networking-Ops-Tools
+# Repository Purpose
+Meant to be a collection of mostly Windows native tools that can be used by ops support teams and engineers to assess the state of the network.
+
+Split into functions and notes.
+
+# Notes
+
+**Notes_nmap-basic**
+nmap captures and service specific scanning notes.
+
+**Notes_run-script-from-repos**
+Suggestions for accessing tools in a mixed Windows/Linux environment that may not have ideal configuration (secure repo).
+
+# Functions
 A collection of scripts for testing and baselining a windows network
 
 **Netstat-Alternative_.net**
